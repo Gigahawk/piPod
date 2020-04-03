@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'statusbar.dart';
 
 void main() {
   runApp(MyApp());
@@ -63,46 +64,37 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(20.0),
-        child: Container(
-          color: Colors.black,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container()
-              ),
-              Expanded(
-                child: Text(
-                  "piPod",
-                  textAlign: TextAlign.center,
-                  ),
-              ),
-              Expanded(
-                child: Container()
-              )
-            ]
-          ),
-        )
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'The window is ',
-            ),
-            Text(
-              '$_width x $_height',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        child: StatusBar()
         ),
+      body: ListView.builder(
+        itemBuilder: (context, index) => ListTile(
+          title: FocusableText(
+            index.toString(),
+            autofocus: index == 0,
+          ),
+        ),
+        itemCount: 50,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _getWindowSize,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class FocusableText extends StatelessWidget {
+  const FocusableText(this.data, {Key key, this.autofocus}) : super(key: key);
+
+  final String data;
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      autofocus: autofocus,
+      child: Builder(builder: (BuildContext context) {
+        return Container(
+          color: Focus.of(context).hasPrimaryFocus ? Colors.blue : null,
+          child: Text(data),
+        );
+      }),
     );
   }
 }
